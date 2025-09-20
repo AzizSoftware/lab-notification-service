@@ -16,7 +16,7 @@ public class EmailService {
 
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("zouaghiaziz122@gmail.com"); // Set a proper 'from' address
+        message.setFrom("zouaghiaziz122@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
@@ -27,15 +27,18 @@ public class EmailService {
     public void sendNewUploadNotification(KafkaMessage notification) {
         String subject = "New File Uploaded: " + notification.getEmail();
         String body = "Hello users, A new file has been uploaded by " + notification.getEmail() + ".\n" +
-                      "File details: Title: " + notification.getMessage(); // Assuming 'message' holds file info
-        
-        // This method requires a list of all user emails to broadcast.
-        // You'll need to fetch them from your user management service or database.
-        // For this example, we'll assume a placeholder.
-        String[] allUserEmails = {"user1@example.com", "user2@example.com"}; // Placeholder
-        
-        for (String email : allUserEmails) {
-            sendEmail(email, subject, body);
+                      "File details: Title: " + notification.getMessage();
+
+        // Use the recipientEmails list from the KafkaMessage
+        if (notification.getRecipientEmails() != null) {
+            String[] recipientEmailsArray = notification.getRecipientEmails().toArray(new String[0]);
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("zouaghiaziz122@gmail.com");
+            message.setTo(recipientEmailsArray);
+            message.setSubject(subject);
+            message.setText(body);
+            mailSender.send(message);
+            System.out.println("Broadcast email sent to " + notification.getRecipientEmails().size() + " users.");
         }
     }
 

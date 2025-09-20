@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +17,5 @@ public class KafkaMessage {
     private String password;
     private String createdAt;
     private String message;
+    private List<String> recipientEmails; 
 }

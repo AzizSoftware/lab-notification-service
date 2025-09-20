@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
 
     @Autowired
-    private EmailService emailService; // Inject the EmailService
+    private EmailService emailService;
 
     @KafkaListener(topics = "notifications", groupId = "notification-service-group", containerFactory = "kafkaListenerContainerFactory")
     public void consume(KafkaMessage message) {
@@ -18,6 +18,7 @@ public class KafkaConsumerService {
         switch (message.getType()) {
             case "FILE_UPLOADED":
                 System.out.println("Processing file upload notification.");
+
                 emailService.sendNewUploadNotification(message);
                 break;
             case "NEW_USER_SIGNUP":
